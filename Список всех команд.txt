@@ -1,0 +1,49 @@
+(venv) D:\Project\PetP\News Portal folder\NewsPortal>python manage.py shell          
+Python 3.8.9 (tags/v3.8.9:a743f81, Apr  6 2021, 14:02:34) [MSC v.1928 64 bit (AMD64)] on win32
+Type "help", "copyright", "credits" or "license" for more information.
+(InteractiveConsole)
+>>> from django.contrib.auth.models import User
+>>> from news.models import *
+>>> user1 = User.objects.create_user('Анатолий') 
+>>> user2 = User.objects.create_user('Степан')   
+>>> author1 = Author.objects.create(user = user1)
+>>> author2 = Author.objects.create(user = user2) 
+>>> category1 = Category.objects.create(category_name = 'Спорт') 
+>>> category2 = Category.objects.create(category_name = 'Политика')
+>>> category3 = Category.objects.create(category_name = 'Бизнес')   
+>>> category4 = Category.objects.create(category_name = 'Здоровье')
+>>> article1 = Post.objects.create(post_var = article, header = 'article1', text = 'article 1 text...', author = author1)
+>>> article2 = Post.objects.create(post_var = article, header = 'article2', text = 'article 2 text...', author = author2) 
+>>> news1 = Post.objects.create(post_var = news, header = 'news1', text = 'news 1 text...', author = author1)             
+>>> article1.category.add(category1, category2) 
+>>> article2.category.add(category3)            
+>>> news1.category.add(category1, category3, category4)
+>>> comment1 = Comment.objects.create(post = article1, user = user2, text = 'comment 1 text') 
+>>> comment2 = Comment.objects.create(post = article2, user = user1, text = 'comment 2 text') 
+>>> comment3 = Comment.objects.create(post = news1, user = user2, text = 'comment 3 text')    
+>>> comment4 = Comment.objects.create(post = news1, user = user1, text = 'comment 4 text') 
+>>> article1.like()
+>>> article1.like()
+>>> article2.like()
+>>> article1.dislike()  
+>>> news1.like()
+>>> news1.like()
+>>> news1.like()
+>>> news1.dislike()
+>>> comment1.like()
+>>> comment1.like()
+>>> comment3.like() 
+>>> comment3.dislike()
+>>> author1.update_rating()
+>>> author2.update_rating()
+>>> Author.objects.all().order_by('-author_rating').values('user__username', 'author_rating').first()
+{'user__username': 'Анатолий', 'author_rating': 9}
+>>> Post.objects.all().order_by('-post_rating').values('post_time', 'author__user__username', 'post_rating', 'header').first()
+{'post_time': datetime.datetime(2022, 12, 14, 13, 40, 56, 472824, tzinfo=datetime.timezone.utc), 'author__user__username': 'Анатолий', 'post_rating': 2, 'header': 'news1'}
+>>> post = Post.objects.get(header = 'news1')                                                                                            
+>>> post.preview()
+'news 1 text......'
+>>> Comment.objects.filter(post = post).values('post_time', 'user__username', 'comment_rating', 'text')
+<QuerySet [{'post_time': datetime.datetime(2022, 12, 14, 13, 53, 8, 544273, tzinfo=datetime.timezone.utc), 'user__username': 'Степан', 'comment_rating': 0, 'text': 
+'comment 3 text'}, {'post_time': datetime.datetime(2022, 12, 14, 13, 53, 30, 513927, tzinfo=datetime.timezone.utc), 'user__username': 'Анатолий', 'comment_rating': 
+0, 'text': 'comment 4 text'}]>
