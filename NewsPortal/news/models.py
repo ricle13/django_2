@@ -48,6 +48,7 @@ class Post(models.Model):
     def dislike(self):
         self.post_rating -= 1
         self.save()
+    
 
 class PostCategory(models.Model):
     post = models.ForeignKey('Post', on_delete = models.CASCADE)
