@@ -15,5 +15,11 @@
     <h2>{{ new.header|censor }}</h2>  <h1>{{ new.post_time|date:'M d Y' }}</h1>
     {{ new.text|censor }}
     <br>
-    <a href=http://127.0.0.1:8000/news>Назад</a></td>
+    <h3>Категории</h3>
+    {% for cat in category %}
+    | {{ cat.category__category_name }} |   
+    {% endfor %}
+    <br><br>
+    <h4><a href=http://127.0.0.1:8000/post/{{ new.post_var }}/{{ new.pk }}/update>Изменить</a>
+        <a href=http://127.0.0.1:8000/post/{{ new.post_var }}/{{ new.pk }}/delete>Удалить</a></h4>
 {% endblock content %}

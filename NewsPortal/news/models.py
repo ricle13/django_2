@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 
 class Author(models.Model):
     author_rating = models.IntegerField(default = 0)
@@ -25,12 +26,12 @@ class Author(models.Model):
 class Category(models.Model):
     category_name = models.CharField(max_length = 32, unique = True)
 
-article = 'article'
+articles = 'articles'
 news = 'news'
-chois = [(article, 'Статья'), (news, 'Новость')]
+chois = [(articles, 'Статья'), (news, 'Новость')]
 
 class Post(models.Model):
-    post_var = models.CharField(max_length = 7, choices = chois, default = article)
+    post_var = models.CharField(max_length = 8, choices = chois, default = articles)
     post_time = models.DateTimeField(auto_now_add = True)
     header = models.CharField(max_length = 64)
     text = models.TextField()
@@ -38,7 +39,9 @@ class Post(models.Model):
 
     author = models.ForeignKey('Author', on_delete = models.CASCADE)
     category = models.ManyToManyField('Category', through = 'PostCategory')
-    
+    def get_absolute_url(self):
+        print(self.id)
+        return reverse('news_detail', args=[self.post_var, str(self.id)])
     def preview(self):
         prev = self.text[0:125] + '...'
         return prev
